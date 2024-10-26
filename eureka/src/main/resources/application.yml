@@ -3,12 +3,8 @@ spring:
         name: eureka
     eureka:
         client:
-            registerWithEureka: false
-            fetchRegistry: false
-        server:
-            maxThreadsForPeerReplication: 0
-        instance:
-            prefer-ip-address: true
+            register-with-eureka: false
+            fetch-registry: false
 management:
     endpoints:
         web:

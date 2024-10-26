@@ -16,6 +16,3 @@ COPY --from=BUILD /eureka/target/*.jar eureka.jar
 EXPOSE 8761
 
 CMD ["java", "-jar", "eureka.jar"]
-
-##docker build -f eureka-DockerFile . -t eureka:ptt
-##docker run eureka:ptt

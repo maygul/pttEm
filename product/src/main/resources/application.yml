@@ -3,12 +3,8 @@ spring:
         name: product-service
     eureka:
         client:
-            registerWithEureka: true
-            fetchRegistry: true
-            serviceUrl:
-                defaultZone: http://eureka_server:8761/eureka
-        instance:
-            prefer-ip-address: true
+            register-with-eureka: true
+            fetch-registry: true
 management:
     endpoints:
         web:

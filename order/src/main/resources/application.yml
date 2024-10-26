@@ -3,12 +3,8 @@ spring:
         name: order-service
     eureka:
         client:
-            registerWithEureka: true
-            fetchRegistry: true
-            serviceUrl:
-                defaultZone: ${EUREKA_SERVER_URI}
-        instance:
-            prefer-ip-address: true
+            register-with-eureka: true
+            fetch-registry: true
     datasource:
         url: ${ORDER_DATASOURCE_URL}
         username: ${ORDER_DATASOURCE_USERNAME}

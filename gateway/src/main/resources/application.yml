@@ -3,31 +3,28 @@ spring:
         name: gateway
     eureka:
         client:
-            registerWithEureka: true
-            fetchRegistry: true
-            serviceUrl:
-                defaultZone: http://eureka_server:8761/eureka
+            register-with-eureka: true
+            fetch-registry: true
         instance:
             prefer-ip-address: true
-            hostname: gateway
+            hostname: localhost
     cloud:
         gateway:
-            mvc:
-                routes:
-                    -   id: order-service
-                        uri: lb://order-service
-                        predicates:
-                            - Path=/orders/**
-                    -   id: product-service
-                        uri: lb://product-service
-                        predicates:
-                            - Path=/products/**
-                    -   id: google-routing
-                        uri: https://www.google.com
-                        predicates:
-                            - Path=/google/**
-                        filters:
-                            - StripPrefix=2
+            routes:
+                -   id: order-service
+                    uri: lb://order-service
+                    predicates:
+                        - Path=/orders/**
+                -   id: product-service
+                    uri: lb://product-service
+                    predicates:
+                        - Path=/products/**
+                -   id: google-routing
+                    uri: https://www.google.com
+                    predicates:
+                        - Path=/google/**
+                    filters:
+                        - StripPrefix=2
 management:
     endpoints:
         web:
