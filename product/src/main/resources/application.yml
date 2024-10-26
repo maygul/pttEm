@@ -1,0 +1,23 @@
+spring:
+    application:
+        name: product-service
+    eureka:
+        client:
+            registerWithEureka: true
+            fetchRegistry: true
+            serviceUrl:
+                defaultZone: http://eureka_server:8761/eureka
+        instance:
+            prefer-ip-address: true
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health, info
+    info:
+        java:
+            enabled: true
+        os:
+            enabled: true
+server:
+    port: 8082

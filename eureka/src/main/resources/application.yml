@@ -1,0 +1,28 @@
+spring:
+    application:
+        name: eureka
+    eureka:
+        client:
+            registerWithEureka: false
+            fetchRegistry: false
+        server:
+            maxThreadsForPeerReplication: 0
+        instance:
+            prefer-ip-address: true
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health, info
+    info:
+        java:
+            enabled: true
+        os:
+            enabled: true
+server:
+    port: 8761
+logging:
+    level:
+        root: INFO
+
+

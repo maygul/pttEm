@@ -1,0 +1,34 @@
+version: '3.3'
+services:
+
+  db_order_service:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "${ORDER_POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_USER=${ORDER_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${ORDER_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${ORDER_POSTGRES_DB}
+    depends_on:
+      - eureka_server
+  order_service:
+    build:
+      dockerfile: order-DockerFile
+    ports:
+      - "${ORDER_SERVICE_PORT}:8081"
+    depends_on:
+      - db_order_service
+      - eureka_server
+    environment:
+      ORDER_DATASOURCE_URL: jdbc:postgresql://db_order_service:5432/${ORDER_POSTGRES_DB}
+      ORDER_DATASOURCE_USERNAME: ${ORDER_POSTGRES_USER}
+      ORDER_DATASOURCE_PASSWORD: ${ORDER_POSTGRES_PASSWORD}
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka_server:8761/eureka
+  eureka_server:
+    build:
+      dockerfile: eureka-DockerFile
+    ports:
+      - "${EUREKA_SERVER_PORT}:8761"
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka_server:8761/eureka

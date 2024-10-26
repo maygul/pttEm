@@ -1,0 +1,28 @@
+spring:
+    application:
+        name: order-service
+    eureka:
+        client:
+            registerWithEureka: true
+            fetchRegistry: true
+            serviceUrl:
+                defaultZone: ${EUREKA_SERVER_URI}
+        instance:
+            prefer-ip-address: true
+    datasource:
+        url: ${ORDER_DATASOURCE_URL}
+        username: ${ORDER_DATASOURCE_USERNAME}
+        password: ${ORDER_DATASOURCE_PASSWORD}
+        driver-class-name: org.postgresql.Driver
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health, info
+    info:
+        java:
+            enabled: true
+        os:
+            enabled: true
+server:
+    port: 8081

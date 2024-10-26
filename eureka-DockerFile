@@ -1,0 +1,21 @@
+FROM jelastic/maven:3.9.5-openjdk-21 AS BUILD
+
+WORKDIR /eureka
+
+COPY /eureka/pom.xml pom.xml
+COPY /eureka/src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM openjdk:21-jdk
+
+WORKDIR /eureka
+
+COPY --from=BUILD /eureka/target/*.jar eureka.jar
+
+EXPOSE 8761
+
+CMD ["java", "-jar", "eureka.jar"]
+
+##docker build -f eureka-DockerFile . -t eureka:ptt
+##docker run eureka:ptt

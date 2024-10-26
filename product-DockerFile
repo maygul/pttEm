@@ -1,0 +1,18 @@
+FROM jelastic/maven:3.9.5-openjdk-21 AS BUILD
+
+WORKDIR /product
+
+COPY /product/pom.xml pom.xml
+COPY /product/src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM openjdk:21-jdk
+
+WORKDIR /product
+
+COPY --from=BUILD /product/target/*.jar product.jar
+
+EXPOSE 8081
+
+CMD ["java", "-jar", "product.jar"]
