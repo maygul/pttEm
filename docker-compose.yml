@@ -12,6 +12,17 @@ services:
       - POSTGRES_DB=${ORDER_POSTGRES_DB}
     depends_on:
       - discovery
+  db_product_service:
+    image: postgres:latest
+    restart: always
+    ports:
+      - ${PRODUCT_POSTGRES_PORT}:5432
+    environment:
+      - POSTGRES_USER=${PRODUCT_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${PRODUCT_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${PRODUCT_POSTGRES_DB}
+    depends_on:
+      - discovery
   order_service:
     build:
       dockerfile: order-DockerFile
@@ -24,14 +35,40 @@ services:
       ORDER_DATASOURCE_URL: jdbc:postgresql://db_order_service:5432/${ORDER_POSTGRES_DB}
       ORDER_DATASOURCE_USERNAME: ${ORDER_POSTGRES_USER}
       ORDER_DATASOURCE_PASSWORD: ${ORDER_POSTGRES_PASSWORD}
-      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: "http://172.19.0.2:8761/eureka"
-      EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: "http://172.19.0.2:8761/eureka"
+      #EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://discovery:8761/eureka
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka
     links:
       - discovery
       - db_order_service
+  product_service:
+    build:
+      dockerfile: product-DockerFile
+    ports:
+        - 8082:8082
+    depends_on:
+      - db_product_service
+      - discovery
+    environment:
+      PRODUCT_DATASOURCE_URL: jdbc:postgresql://db_product_service:5432/${PRODUCT_POSTGRES_DB}
+      PRODUCT_DATASOURCE_USERNAME: ${PRODUCT_POSTGRES_USER}
+      PRODUCT_DATASOURCE_PASSWORD: ${PRODUCT_POSTGRES_PASSWORD}
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka
+    links:
+      - discovery
+      - db_product_service
+  gateway_service:
+    build:
+        dockerfile: gateway-DockerFile
+    ports:
+        - 8080:8080
+    environment:
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka
+    links:
+      - discovery
+      - product_service
+      - order_service
   discovery:
     build:
       dockerfile: eureka-DockerFile
     ports:
       - 8761:8761
-    hostname: localhost
