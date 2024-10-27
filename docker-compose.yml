@@ -27,7 +27,7 @@ services:
     build:
       dockerfile: order-DockerFile
     ports:
-      - 8081:8081
+      - ${ORDER_SERVER_PORT}:8081
     depends_on:
       - db_order_service
       - discovery
@@ -44,7 +44,7 @@ services:
     build:
       dockerfile: product-DockerFile
     ports:
-        - 8082:8082
+      - ${PRODUCT_SERVER_PORT}:8082
     depends_on:
       - db_product_service
       - discovery
@@ -60,7 +60,7 @@ services:
     build:
         dockerfile: gateway-DockerFile
     ports:
-        - 8080:8080
+        - ${GATEWAY_SERVER_PORT}:8080
     environment:
       eureka.client.service-url.defaultZone: http://discovery:8761/eureka
     links:
@@ -71,4 +71,4 @@ services:
     build:
       dockerfile: eureka-DockerFile
     ports:
-      - 8761:8761
+      - ${EUREKA_SERVER_PORT}:8761
