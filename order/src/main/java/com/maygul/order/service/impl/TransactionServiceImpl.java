@@ -27,7 +27,7 @@ public class TransactionServiceImpl implements TransactionService {
         var count = productList.stream()
                 .filter(product -> {
                     var expectedCount = productsWithCounts.get(product.getId());
-                    var result = product.getStockCount() > expectedCount;
+                    var result = product.getStockCount() >= expectedCount;
                     resultMap.put(product.getId(), result);
                     return result;
                 }).count();

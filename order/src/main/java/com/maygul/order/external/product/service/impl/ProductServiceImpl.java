@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> getAllWithIdList(Set<Long> longs) {
         try {
             var productIdParam = longs.stream().map(String::valueOf).collect(Collectors.toList()).stream().collect(Collectors.joining(","));
-            var responseEntity = restTemplate.exchange(String.format("%s/products?ids=%s", PRODUCT_SERVICE_BASE_URL, productIdParam), HttpMethod.GET, null, new ParameterizedTypeReference<List<ProductDto>>() {
+            var responseEntity = restTemplate.exchange(String.format("%s/products/ids?ids=%s", PRODUCT_SERVICE_BASE_URL, productIdParam), HttpMethod.GET, null, new ParameterizedTypeReference<List<ProductDto>>() {
             });
             var responseBody = responseEntity.getBody();
             return responseBody;

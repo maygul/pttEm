@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Entity
+@SequenceGenerator(name = "order_id_seq", sequenceName = "order_id_seq", allocationSize = 1)
 public class OrderEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_id_seq")
     private Long id;
     private Long userId;
     private OrderStatusEnum status;
