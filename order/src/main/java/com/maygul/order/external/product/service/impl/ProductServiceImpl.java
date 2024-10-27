@@ -1,5 +1,6 @@
 package com.maygul.order.external.product.service.impl;
 
+import com.maygul.order.exception.ProductServiceCallException;
 import com.maygul.order.external.product.service.ProductService;
 import com.maygul.order.external.product.service.dto.ProductDto;
 import org.slf4j.Logger;
@@ -38,8 +39,8 @@ public class ProductServiceImpl implements ProductService {
             return responseBody;
         } catch (HttpStatusCodeException ex) {
             log.error("Error while getting products from product service", ex);
+            throw new ProductServiceCallException();
         }
-        return List.of();
     }
 
     @Override
@@ -53,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
             return responseEntity.getStatusCode().is2xxSuccessful();
         } catch (HttpStatusCodeException ex) {
             log.error("Error while reserving products from product service", ex);
-            throw new RuntimeException("Error while reserving products from product service");
+            throw new ProductServiceCallException();
         }
     }
 
@@ -69,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
             return responseEntity.getStatusCode().is2xxSuccessful();
         } catch (HttpStatusCodeException ex) {
             log.error("Error while putting reserved products back from product service", ex);
-            throw new RuntimeException("Error while putting reserved products back from product service");
+            throw new ProductServiceCallException();
         }
     }
 

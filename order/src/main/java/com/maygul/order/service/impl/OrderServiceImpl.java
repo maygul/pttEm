@@ -1,5 +1,7 @@
 package com.maygul.order.service.impl;
 
+import com.maygul.order.exception.OrderNotFoundException;
+import com.maygul.order.exception.ProductOutOfStockException;
 import com.maygul.order.external.product.service.ProductService;
 import com.maygul.order.mapper.OrderMapper;
 import com.maygul.order.persistence.entity.OrderEntity;
@@ -43,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.save(orderEntity);
             return orderMapper.toDto(orderEntity);
         } else {
-            throw new RuntimeException("Order products are not in stock");
+            throw new ProductOutOfStockException();
         }
 
     }
@@ -98,6 +100,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderEntity getOrderEntityById(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException());
     }
 }

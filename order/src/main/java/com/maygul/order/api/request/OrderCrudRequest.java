@@ -12,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class OrderCrudRequest {
-    @NotNull
+    @NotNull(message = "validation.not.null")
     private List<OrderProductDto> products;
-    @NotNull
+    @NotNull(message = "validation.not.null")
     private Long userId;
 }

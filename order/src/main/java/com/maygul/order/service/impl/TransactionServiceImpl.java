@@ -1,7 +1,8 @@
 package com.maygul.order.service.impl;
 
+import com.maygul.order.exception.ProductOutOfStockException;
+import com.maygul.order.exception.TransactionNotFoundException;
 import com.maygul.order.external.product.service.ProductService;
-import com.maygul.order.mapper.TransactionMapper;
 import com.maygul.order.persistence.entity.TransactionEntity;
 import com.maygul.order.persistence.entity.TransactionStatusEnum;
 import com.maygul.order.persistence.repository.TransactionRepository;
@@ -17,7 +18,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
-    private final TransactionMapper transactionMapper;
     private final ProductService productService;
 
     @Override
@@ -42,10 +42,10 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.save(entity);
     }
 
-    @Transactional(rollbackFor = RuntimeException.class)
+    @Transactional
     @Override
     public TransactionEntity updateTransaction(String transactionId, Map<Long, Integer> productsWithCounts) {
-        var entity = transactionRepository.findById(transactionId).orElseThrow(() -> new RuntimeException("Transaction not found"));
+        var entity = getTransactionEntityById(transactionId);
         //find the difference between the reserved products and the new products
         var diff = new HashMap<Long, Integer>();
         entity.getReservedProducts().forEach((key, value) -> {
@@ -82,7 +82,7 @@ public class TransactionServiceImpl implements TransactionService {
             if (checkIfProductsAvailable(combinedMap)) {
                 productService.reserveProducts(combinedMap);
             } else {
-                throw new RuntimeException("Not enough stock for the new products");
+                throw new ProductOutOfStockException();
             }
         }
 
@@ -99,7 +99,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public void cancelTransaction(String transactionId) {
-        var entity = transactionRepository.findById(transactionId).orElseThrow(() -> new RuntimeException("Transaction not found"));
+        var entity = getTransactionEntityById(transactionId);
         productService.putReservedProductsBack(entity.getReservedProducts());
         entity.setStatus(TransactionStatusEnum.CANCELLED);
         transactionRepository.save(entity);
@@ -107,9 +107,13 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void completeTransaction(String transactionId) {
-        var entity = transactionRepository.findById(transactionId).orElseThrow(() -> new RuntimeException("Transaction not found"));
+        var entity = getTransactionEntityById(transactionId);
         entity.setStatus(TransactionStatusEnum.COMPLETED);
         transactionRepository.save(entity);
+    }
+
+    private TransactionEntity getTransactionEntityById(String transactionId) {
+        return transactionRepository.findById(transactionId).orElseThrow(() -> new TransactionNotFoundException());
     }
 
 }

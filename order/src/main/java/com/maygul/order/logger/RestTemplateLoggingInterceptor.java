@@ -1,4 +1,4 @@
-package com.maygul.order.interceptor;
+package com.maygul.order.logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -77,14 +77,14 @@ public class RestTemplateLoggingInterceptor implements ClientHttpRequestIntercep
         var body = StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8);
         var httpStatus = response.getStatusCode().value();
         var mediaType = response.getHeaders().getContentType();
-
+        var headers = response.getHeaders();
         var dto =
                 ResponseLogDto.builder()
                         .type(LogTypeEnum.RESPONSE_IN)
                         .httpStatus(httpStatus)
                         .mediaType(mediaType)
                         .responseBody(body)
-                        .responseBodyClass(null)
+                        .headers(headers.toSingleValueMap())
                         .build();
 
         log.info("Response : {}", serialize(dto));

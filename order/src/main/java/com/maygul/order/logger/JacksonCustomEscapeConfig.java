@@ -1,4 +1,4 @@
-package com.maygul.order.interceptor;
+package com.maygul.order.logger;
 
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
