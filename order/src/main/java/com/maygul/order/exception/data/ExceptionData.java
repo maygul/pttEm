@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Schema(name = "ExceptionData", description = "Object For Exception Response")
 public class ExceptionData {
 
     @Schema(description = "Application name that the exception is thrown from")
@@ -22,6 +23,7 @@ public class ExceptionData {
     @Schema(description = "Error message of the exception")
     private String errorMessage;
 
+    @Schema(description = "Api validation error list")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ValidationErrorData> errors;
 
