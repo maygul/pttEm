@@ -6,8 +6,9 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring",uses = {TransactionMapper.class})
+@Mapper(componentModel = "spring", uses = {TransactionMapper.class})
 public interface OrderMapper {
+
 
     OrderDto toDto(OrderEntity orderEntity);
 

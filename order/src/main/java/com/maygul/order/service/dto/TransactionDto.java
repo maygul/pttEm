@@ -11,7 +11,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Builder
 public class TransactionDto {
-    private String transactionId;
+    private String id;
     private Map<Long, Integer> reservedProducts;
     private TransactionStatusEnum status;
 }

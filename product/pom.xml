@@ -31,6 +31,7 @@
 		<spring-cloud.version>2023.0.3</spring-cloud.version>
 		<dep.mapstruct.version>1.4.1.Final</dep.mapstruct.version>
 		<dep.lombok.version>1.18.30</dep.lombok.version>
+		<dep.springdoc.openapi.version>2.1.0</dep.springdoc.openapi.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -98,6 +99,12 @@
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-processor</artifactId>
 			<version>${dep.mapstruct.version}</version>
+		</dependency>
+		<!-- OPENAPI (SWAGGER)-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${dep.springdoc.openapi.version}</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

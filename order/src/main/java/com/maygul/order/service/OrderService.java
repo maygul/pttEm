@@ -1,6 +1,7 @@
 package com.maygul.order.service;
 
 import com.maygul.order.service.dto.OrderDto;
+import com.maygul.order.service.dto.OrderPageDto;
 import com.maygul.order.service.dto.OrderProductDto;
 
 import java.util.List;
@@ -15,4 +16,7 @@ public interface OrderService {
 
     OrderDto cancelOrder(Long orderId);
 
+    OrderDto getOrder(Long orderId);
+
+    OrderPageDto getOrderList(Long userId, Integer size, Integer page);
 }

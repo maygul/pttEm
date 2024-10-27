@@ -6,11 +6,14 @@ import com.maygul.order.persistence.entity.OrderEntity;
 import com.maygul.order.persistence.entity.OrderStatusEnum;
 import com.maygul.order.persistence.entity.TransactionStatusEnum;
 import com.maygul.order.persistence.repository.OrderRepository;
+import com.maygul.order.persistence.specification.OrderSpecification;
 import com.maygul.order.service.OrderService;
 import com.maygul.order.service.TransactionService;
 import com.maygul.order.service.dto.OrderDto;
+import com.maygul.order.service.dto.OrderPageDto;
 import com.maygul.order.service.dto.OrderProductDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,6 +76,25 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.save(orderEntity);
         return orderMapper.toDto(orderEntity);
+    }
+
+    @Override
+    public OrderDto getOrder(Long orderId) {
+        return orderMapper.toDto(getOrderEntityById(orderId));
+    }
+
+    @Override
+    public OrderPageDto getOrderList(Long userId, Integer size, Integer page) {
+        var orderSpec = OrderSpecification.hasUserId(userId);
+        PageRequest pageRequest = PageRequest.of(page, size);
+        var orderPage = orderRepository.findAll(orderSpec, pageRequest);
+
+        var orderList = orderPage.getContent();
+        var pageSize = orderPage.getTotalPages();
+        return OrderPageDto.builder()
+                .totalPages(pageSize)
+                .orders(orderMapper.toOrderDtos(orderList))
+                .build();
     }
 
     private OrderEntity getOrderEntityById(Long orderId) {
