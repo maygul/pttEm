@@ -20,16 +20,8 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class RestTemplateLoggingInterceptor implements ClientHttpRequestInterceptor {
 
-    private final ObjectMapper mapper;
-
     public RestTemplateLoggingInterceptor(){
-        mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        // to prevent adding escape characters to the string attributes in logged object
-        mapper.getFactory().setCharacterEscapes(new JacksonCustomEscapeConfig());
+
     }
     @Override
     public ClientHttpResponse intercept(
@@ -61,17 +53,9 @@ public class RestTemplateLoggingInterceptor implements ClientHttpRequestIntercep
                         .requestBody(requestBody)
                         .build();
 
-        log.info("Request : {}", serialize(dto));
+        log.info("Request : {}", LogTypeEnum.serialize(dto));
     }
 
-    private String serialize(Object dto) {
-        try {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
-        } catch (Exception e) {
-            log.error("Error while serializing object", e);
-            return null;
-        }
-    }
 
     private void logResponse(ClientHttpResponse response) throws IOException {
         var body = StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8);
@@ -87,7 +71,7 @@ public class RestTemplateLoggingInterceptor implements ClientHttpRequestIntercep
                         .headers(headers.toSingleValueMap())
                         .build();
 
-        log.info("Response : {}", serialize(dto));
+        log.info("Response : {}", LogTypeEnum.serialize(dto));
     }
 
     private static class CachedClientHttpResponse implements ClientHttpResponse {

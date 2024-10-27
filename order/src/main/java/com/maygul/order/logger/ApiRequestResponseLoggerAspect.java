@@ -25,15 +25,15 @@ public class ApiRequestResponseLoggerAspect {
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     protected void restController() {}
 
-    @Pointcut("execution(public * com.maygul..*.*(..))")
-    protected void apiOperation() {}
+    @Pointcut("within(com.maygul..*)")
+    protected void allPackages() {}
 
-    @Before("restController() && apiOperation()")
+    @Before("restController() && allPackages()")
     public void logBefore(JoinPoint jointPoint) {
         logRequest(jointPoint);
     }
 
-    @AfterReturning(pointcut = "restController() && apiOperation()", returning = "response")
+    @AfterReturning(pointcut = "restController() && allPackages()", returning = "response")
     public void logAfterReturning(JoinPoint joinPoint, Object response) {
         logResponse((ResponseEntity) response);
     }
@@ -83,7 +83,7 @@ public class ApiRequestResponseLoggerAspect {
                         .url(uri)
                         .type(LogTypeEnum.REQUEST_IN)
                         .build();
-        log.info("Request : {}", requestLogDto);
+        log.info("Request : {}", LogTypeEnum.serialize(requestLogDto));
     }
 
     private void logResponse(ResponseEntity<?> response) {
@@ -106,7 +106,7 @@ public class ApiRequestResponseLoggerAspect {
                         .mediaType(mediaType)
                         .type(LogTypeEnum.RESPONSE_OUT)
                         .build();
-        log.info("Response : {}", responseLogDto);
+        log.info("Response : {}", LogTypeEnum.serialize(responseLogDto));
     }
 
 }

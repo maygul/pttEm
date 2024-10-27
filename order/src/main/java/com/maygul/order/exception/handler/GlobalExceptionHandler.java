@@ -4,6 +4,7 @@ import com.maygul.order.exception.data.DataNotFoundException;
 import com.maygul.order.exception.data.ExceptionData;
 import com.maygul.order.exception.data.ExceptionTypeEnum;
 import com.maygul.order.exception.data.MicroException;
+import com.maygul.order.logger.LogTypeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -99,7 +100,7 @@ public class GlobalExceptionHandler {
         }
         data.setErrorMessage(errorMessage);
 
-        log.error("Exception response: {}", data);
+        log.error("Exception response: {}", LogTypeEnum.serialize(data));
         return data;
     }
 
