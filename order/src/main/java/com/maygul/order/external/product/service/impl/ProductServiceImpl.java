@@ -32,8 +32,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> getAllWithIdList(Set<Long> longs) {
         try {
-            var productIdParam = longs.stream().map(String::valueOf).collect(Collectors.toList()).stream().collect(Collectors.joining(","));
-            var responseEntity = restTemplate.exchange(String.format("%s/products/ids?ids=%s", PRODUCT_SERVICE_BASE_URL, productIdParam), HttpMethod.GET, null, new ParameterizedTypeReference<List<ProductDto>>() {
+             Map<String,List> request = Map.of("ids", longs.stream().collect(Collectors.toList()));
+             HttpEntity entity = new HttpEntity(request);
+            var responseEntity = restTemplate.exchange(String.format("%s/products/provide-product-info-for-order", PRODUCT_SERVICE_BASE_URL), HttpMethod.GET, entity, new ParameterizedTypeReference<List<ProductDto>>() {
             });
             var responseBody = responseEntity.getBody();
             return responseBody;
@@ -47,7 +48,8 @@ public class ProductServiceImpl implements ProductService {
     public Boolean reserveProducts(Map<Long, Integer> productsWithCounts) {
         var uri = String.format("%s/products/reserve-products", PRODUCT_SERVICE_BASE_URL);
         var method = HttpMethod.POST;
-        var httpEntity = new HttpEntity<>(productsWithCounts);
+        Map<String,Map> data = Map.of("productAndCountMap", productsWithCounts);
+        var httpEntity = new HttpEntity<>(data);
         var responseType = Void.class;
         try {
             var responseEntity = restTemplate.exchange(uri, method, httpEntity, responseType);
@@ -62,7 +64,8 @@ public class ProductServiceImpl implements ProductService {
     public Boolean putReservedProductsBack(Map<Long, Integer> negativeDiff) {
         var uri = String.format("%s/products/put-reserved-products-back", PRODUCT_SERVICE_BASE_URL);
         var method = HttpMethod.POST;
-        var httpEntity = new HttpEntity<>(negativeDiff);
+        Map<String,Map> data = Map.of("productAndCountMap", negativeDiff);
+        var httpEntity = new HttpEntity<>(data);
         var responseType = Void.class;
 
         try {
