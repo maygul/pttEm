@@ -7,11 +7,11 @@ import jakarta.persistence.AttributeConverter;
 import java.io.IOException;
 import java.util.Map;
 
-public class MapToStringConverter implements AttributeConverter<Map<Integer,Integer>,String> {
+public class MapToStringConverter implements AttributeConverter<Map<Long,Integer>,String> {
 
     private final ObjectMapper mapper = new ObjectMapper();
     @Override
-    public String convertToDatabaseColumn(Map<Integer, Integer> attribute) {
+    public String convertToDatabaseColumn(Map<Long, Integer> attribute) {
         if(attribute == null)
             return null;
         try{
@@ -23,7 +23,7 @@ public class MapToStringConverter implements AttributeConverter<Map<Integer,Inte
     }
 
     @Override
-    public Map<Integer, Integer> convertToEntityAttribute(String dbData) {
+    public Map<Long, Integer> convertToEntityAttribute(String dbData) {
         if(dbData == null){
             return Map.of();
         }
