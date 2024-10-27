@@ -26,5 +26,5 @@ public interface ProductService {
 
     void putReservedProductsBack(Map<Long, Integer> reservedProducts);
 
-    List<ProductDto> getByIds(List<Long> ids);
+    List<ProductDto> provideProductInfoForOrder(List<Long> ids);
 }

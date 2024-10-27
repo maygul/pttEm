@@ -98,9 +98,9 @@ public class ProductController {
             }
     )
     @GetMapping("/provide-product-info-for-order")
-    public ResponseEntity<List<ProductDto>> getByIds(@RequestBody @Valid ProductInfoRequest request) {
+    public ResponseEntity<List<ProductDto>> provideProductInfoForOrder(@RequestBody @Valid ProductInfoRequest request) {
         var idList = request.getIds();
-        return ResponseEntity.ok(productService.getByIds(idList));
+        return ResponseEntity.ok(productService.provideProductInfoForOrder(idList));
     }
 
     @Operation(summary = "Reserve products",

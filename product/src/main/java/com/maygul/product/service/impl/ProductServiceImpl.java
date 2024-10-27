@@ -96,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getByIds(List<Long> ids) {
+    public List<ProductDto> provideProductInfoForOrder(List<Long> ids) {
         var products = productRepository.findAllById(ids);
         return mapper.toDtoList(products);
     }
