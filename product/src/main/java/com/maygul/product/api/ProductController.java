@@ -4,6 +4,7 @@ import com.maygul.product.api.request.ProductCrudRequest;
 import com.maygul.product.service.ProductService;
 import com.maygul.product.service.dto.ProductDto;
 import com.maygul.product.service.dto.ProductPageDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,18 +29,18 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(productService.getById(id));
     }
 
     @PostMapping("/")
-    public ResponseEntity<ProductDto> save(@RequestBody ProductCrudRequest productDto) {
+    public ResponseEntity<ProductDto> save(@RequestBody @Valid ProductCrudRequest productDto) {
         return ResponseEntity.ok(productService.save(productDto));
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<ProductDto> update(@PathVariable Long id,
-                                             @RequestBody ProductCrudRequest request) {
+    public ResponseEntity<ProductDto> update(@PathVariable(name = "id") Long id,
+                                             @RequestBody @Valid ProductCrudRequest request) {
         return ResponseEntity.ok(productService.update(id, request));
     }
 
